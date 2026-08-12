@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Thought I Was Building a Chatbot</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --text: #202124;
+      --muted: #666;
+      --card: #ffffff;
+      --border: #e5e5e5;
+      --accent: #4f46e5;
+      --code: #f3f4f6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.75;
+    }
+
+    .page {
+      width: min(900px, calc(100% - 40px));
+      margin: 70px auto;
+    }
+
+    header {
+      margin-bottom: 55px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      margin: 0 0 22px;
+    }
+
+    .intro {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    h2 {
+      margin-top: 58px;
+      margin-bottom: 16px;
+      font-size: 1.75rem;
+      line-height: 1.25;
+    }
+
+    p {
+      margin: 0 0 20px;
+      font-size: 1.04rem;
+    }
+
+    strong {
+      font-weight: 700;
+    }
+
+    .flow {
+      margin: 30px 0;
+      padding: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow-x: auto;
+      text-align: center;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      line-height: 2;
+    }
+
+    .flow span {
+      display: inline-block;
+      padding: 4px 10px;
+      margin: 3px;
+      background: var(--code);
+      border-radius: 7px;
+    }
+
+    .flow .arrow {
+      background: transparent;
+      padding: 0 2px;
+    }
+
+    blockquote {
+      margin: 24px 0;
+      padding: 12px 20px;
+      border-left: 4px solid var(--accent);
+      background: var(--card);
+      color: #444;
+    }
+
+    ul {
+      margin-bottom: 24px;
+    }
+
+    footer {
+      margin-top: 70px;
+      padding-top: 25px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        width: min(100% - 24px, 900px);
+        margin: 35px auto;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header>
+      <h1>I Thought I Was Building a Chatbot</h1>
+      <p class="intro">
+        I wanted to build an AI that could understand a GitHub repository.
+        Sounds simple enough. Give Gemini the code, ask a question, get an answer.
+        Except that isn't how it works.
+      </p>
+      <p class="intro">
+        The first time I heard the words <strong>embeddings</strong> and
+        <strong>vector database</strong>, I had absolutely no idea why I needed either of them.
+      </p>
+    </header>
+
+    <section>
+      <h2>The Idea</h2>
+
+      <p>
+        I had been exploring GenAI and wanted to build something more than just a normal chatbot.
+        I use GitHub a lot, and whenever I opened a new repository, I realised how difficult it could
+        be to understand someone else's project. There could be hundreds of files, different folders,
+        different technologies, configuration files, frontend code, backend code and a lot of things
+        I had never seen before.
+      </p>
+
+      <p>
+        So I thought, what if I could just give an AI a GitHub repository and ask it questions about the code?
+      </p>
+
+      <p>Things like:</p>
+
+      <ul>
+        <li>Where is authentication handled?</li>
+        <li>How does this project connect to the database?</li>
+        <li>Which file handles this function?</li>
+        <li>What technologies are being used?</li>
+      </ul>
+
+      <p>
+        That was how I started working on <strong>CodeAtlas</strong>.
+        At first, I thought the main challenge would be connecting Gemini to the repository.
+        I was very wrong.
+      </p>
+    </section>
+
+    <section>
+      <h2>So how do I actually give a repository to an AI?</h2>
+
+      <p>
+        A GitHub repository is not one big piece of text. It has multiple folders, files and different
+        types of code. So the first thing I had to figure out was how to actually get the repository into my program.
+      </p>
+
+      <p>
+        I started by cloning the repository and reading its files. Then I had to decide which files I should read,
+        which ones I should ignore and how I should store all this information.
+      </p>
+
+      <p>
+        Once I had the files, I faced another problem. I couldn't just send the entire repository to Gemini every
+        time someone asked a question. If someone asks me where the login API is, I don't need to send hundreds of
+        files to the model. I only need the few pieces of code that are actually related to the question.
+      </p>
+
+      <p>And this is where I started learning about <strong>chunking, embeddings and vector stores</strong>.</p>
+    </section>
+
+    <section>
+      <h2>The words I didn't understand</h2>
+
+      <p>
+        The first time I came across embeddings, I basically knew that they somehow converted text into numbers.
+        But why?
+      </p>
+
+      <p>
+        After exploring more, I understood that embeddings represent text as vectors in a way that allows similar
+        meanings to be closer to each other. So if one part of the repository talks about authentication and I ask
+        something about login, the system can find the relevant code even if the exact words are different.
+      </p>
+
+      <p>
+        I started splitting the repository into smaller chunks and generating embeddings for those chunks.
+        Then came the vector store.
+      </p>
+
+      <p>
+        At first, "vector database" sounded like another complicated AI term that I was just supposed to know.
+        But once I understood what it was doing, it became much simpler. I needed somewhere to store all these
+        embeddings so that when a user asked a question, I could search through them and find the chunks that were
+        most relevant.
+      </p>
+
+      <div class="flow">
+        <span>Repository</span><span class="arrow">→</span>
+        <span>Files</span><span class="arrow">→</span>
+        <span>Chunks</span><span class="arrow">→</span>
+        <span>Embeddings</span><span class="arrow">→</span>
+        <span>Vector Store</span><span class="arrow">→</span>
+        <span>Retrieval</span><span class="arrow">→</span>
+        <span>Gemini</span>
+      </div>
+
+      <p>
+        Instead of just doing <strong>Question → Gemini → Answer</strong>, I was doing
+        <strong>Question → Find relevant code → Give it to Gemini → Answer</strong>.
+      </p>
+
+      <p>
+        That was when I started understanding what RAG actually meant instead of just knowing the term.
+      </p>
+    </section>
+
+    <section>
+      <h2>And then things started breaking</h2>
+
+      <p>
+        Of course, understanding the idea and actually making it work were two completely different things.
+      </p>
+
+      <p>
+        At one point, my vector store was empty. I had indexed the repository, or at least I thought I had,
+        but when I tried retrieving something, nothing useful was coming back.
+      </p>
+
+      <p>
+        I had no idea whether the problem was with reading the files, creating chunks, generating embeddings or storing them.
+        So I started checking everything one step at a time. Were the files actually being read? Were chunks being created?
+        Were embeddings being generated? Were they being stored? Was retrieval returning anything? Was the retrieved code
+        actually relevant? Was Gemini even getting the right context?
+      </p>
+
+      <p>
+        This was one of the first times I realised that debugging is not always about looking at an error and finding a quick fix.
+        Sometimes you have to understand your entire flow and find the exact point where things stopped working.
+      </p>
+
+      <p>
+        Earlier, whenever I got an error, I would immediately search for the error and try to fix it. While working on CodeAtlas,
+        I slowly started learning to ask myself what exactly was failing and why.
+      </p>
+    </section>
+
+    <section>
+      <h2>Then came the backend</h2>
+
+      <p>
+        Once the basic repository question answering was working, I wanted to make it into an actual application instead of
+        something that only ran through my Python files. So I created a Flask backend with a chat endpoint and started connecting it to the frontend.
+      </p>
+
+      <p>
+        And then more things broke.
+      </p>
+
+      <p>
+        The frontend was not connecting properly. The API URL was wrong. Sometimes the backend worked perfectly when I tested it
+        separately, but the frontend still could not communicate with it.
+      </p>
+
+      <p>
+        It was frustrating because none of these problems felt like the "AI" part of the project.
+        But that taught me something important: <strong>an AI project is still a software project.</strong>
+      </p>
+
+      <p>
+        You can understand embeddings perfectly, but if your backend is not working, the application is still not working.
+        You can have a good retrieval system, but if you retrieve the wrong code, Gemini can still give you a completely wrong answer.
+        Everything has to work together.
+      </p>
+    </section>
+
+    <section>
+      <h2>Then I asked a follow up question</h2>
+
+      <p>
+        This was one of the problems I found really interesting.
+      </p>
+
+      <p>
+        Suppose I ask:
+      </p>
+
+      <blockquote>"Explain OrderEscrow.sol."</blockquote>
+
+      <p>
+        The system can retrieve the correct information. Then I ask:
+      </p>
+
+      <blockquote>"Who calls it?"</blockquote>
+
+      <p>
+        A human understands that "it" refers to OrderEscrow.sol. My retrieval system didn't necessarily understand that.
+        It just saw "Who calls it?" and tried to search for that. The results were obviously much worse.
+      </p>
+
+      <p>
+        That was when I started working on <strong>query rewriting</strong>. Before retrieval, I could rewrite the follow up
+        question into something more complete, like "Who calls OrderEscrow.sol?" Now the retrieval system had the context it needed.
+      </p>
+
+      <p>
+        It was a small change, but it made me realise that building an AI application is not only about the model.
+        A lot of the work happens before the model even gets the question.
+      </p>
+    </section>
+
+    <section>
+      <h2>Making CodeAtlas understand the whole project</h2>
+
+      <p>
+        Once the basic question answering part started working, I wanted to do more with it. I didn't want CodeAtlas to only
+        answer questions about individual pieces of code. I also wanted it to understand the project at a higher level.
+      </p>
+
+      <p>
+        So I started working on a <strong>project analyzer</strong>.
+      </p>
+
+      <p>
+        It could look at the repository structure and configuration files and identify things like the technology stack
+        and give an overview of the project.
+      </p>
+
+      <p>
+        This made me realise that there are different types of questions we can ask about a codebase. Sometimes I want to know
+        where a particular function is used. Sometimes I want to understand how authentication works. Sometimes I just want
+        to know what technologies the project uses and how the whole project is structured.
+      </p>
+
+      <p>
+        All of these questions need different information from the repository. That made me realise that getting the right
+        information to the model is just as important as the model itself.
+      </p>
+    </section>
+
+    <section>
+      <h2>AI doesn't magically solve everything</h2>
+
+      <p>
+        When I first started exploring GenAI, I think I had this idea that once I connected an LLM to my application,
+        most of the difficult work would be done.
+      </p>
+
+      <p>It really isn't.</p>
+
+      <p>
+        An LLM can give you a very convincing answer even when you give it the wrong information. If I retrieve the wrong
+        piece of code and send it to Gemini, Gemini can still generate an answer that sounds completely correct.
+      </p>
+
+      <p>
+        That made me start paying much more attention to retrieval. Instead of only thinking about how to make Gemini answer
+        a question, I started thinking about what information Gemini should actually see before answering it.
+      </p>
+
+      <p>
+        I started experimenting with things like the number of chunks I should retrieve, giving file path information as context
+        and rewriting queries before retrieval. That was a pretty big change in how I thought about GenAI.
+      </p>
+    </section>
+
+    <section>
+      <h2>What I actually learned</h2>
+
+      <p>
+        I started CodeAtlas without really understanding embeddings, vector stores or RAG. Now I understand why I needed them
+        and how they fit together.
+      </p>
+
+      <p>
+        I learnt how to take a repository, read its files, split them into useful pieces, create embeddings, store them,
+        retrieve relevant information and then use that information to generate an answer with Gemini.
+      </p>
+
+      <p>
+        But I also learnt a lot of things that were not directly related to AI. I learnt how to structure a project,
+        connect a backend to a frontend, debug a system where there are multiple things that could be wrong, read code that
+        I did not write and break a big problem into smaller problems.
+      </p>
+
+      <p>
+        And probably the most important thing I learnt was that I don't need to understand everything before starting a project.
+      </p>
+
+      <p>
+        When I started CodeAtlas, I didn't know how the complete system would work. I just had an idea. Then I figured out one
+        problem, reached another one, got stuck, searched for answers, asked questions, used AI to understand things I didn't know
+        and tried again.
+      </p>
+
+      <p>
+        Eventually, all those small pieces started coming together.
+      </p>
+
+      <p>
+        I started with a very simple question:
+      </p>
+
+      <blockquote><strong>"Can I make an AI understand a GitHub repository?"</strong></blockquote>
+
+      <p>
+        Now I realise that the harder question isn't how to make the AI answer.
+        It is:
+      </p>
+
+      <blockquote><strong>"How do I make sure I give it the right information to answer?"</strong></blockquote>
+
+      <p>
+        And I think that was the real thing I learnt while building CodeAtlas.
+      </p>
+    </section>
+
+    <footer>
+      Built from my first year experience learning GenAI, retrieval and software development through CodeAtlas.
+    </footer>
+
+  </main>
+</body>
+</html>
